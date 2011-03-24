@@ -67,7 +67,7 @@ define('AWS_ENABLE_EXTENSIONS', 'false');
 
 /**
  * Constant: AWS_DEVPAY_PRODUCT_TOKEN
- *      Required for accessing Devpay Buckets.
+ *      Required for accessing Devpay Buckets. Found in the AWS Security Credentials for your Devpay Product account. This value needs to be a constant.
  */
 define('AWS_DEVPAY_PRODUCT_TOKEN', '');
 
