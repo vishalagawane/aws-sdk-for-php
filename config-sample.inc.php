@@ -64,3 +64,15 @@ define('AWS_CLOUDFRONT_PRIVATE_KEY_PEM', '');
  * load `sdk.class.php` last to avoid clobbering any other autoloaders.
  */
 define('AWS_ENABLE_EXTENSIONS', 'false');
+
+/**
+ * Constant: AWS_DEVPAY_PRODUCT_TOKEN
+ *      Required for accessing Devpay Buckets.
+ */
+define('AWS_DEVPAY_PRODUCT_TOKEN', '');
+
+/**
+ * Constant: AWS_DEVPAY_USER_TOKEN
+ *      Required for accessing Devpay Buckets. Found in the AWS Security Credentials. You can also pass this value as the third parameter to a service constructor.
+ */
+define('AWS_DEVPAY_USER_TOKEN', '');
