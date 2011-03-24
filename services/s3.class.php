@@ -251,7 +251,7 @@ class AmazonS3 extends CFRuntime
 	 * @param string $secret_key (Optional) Amazon API Secret Key. If blank, the `AWS_SECRET_KEY` constant is used.
 	 * @return boolean A value of <code>false</code> if no valid values are set, otherwise <code>true</code>.
 	 */
-	public function __construct($key = null, $secret_key = null)
+	public function __construct($key = null, $secret_key = null, $user_token = null)
 	{
 		$this->vhost = null;
 		$this->api_version = '2006-03-01';
@@ -275,7 +275,12 @@ class AmazonS3 extends CFRuntime
 			throw new S3_Exception('No account secret was passed into the constructor, nor was it set in the AWS_SECRET_KEY constant.');
 		}
 
-		return parent::__construct($key, $secret_key);
+		if (!$user_token && !defined('AWS_DEVPAY_USER_TOKEN'))
+		{
+			throw new S3_Exception('No account user token was passed into the constructor, nor was it set in the AWS_DEVPAY_USER_TOKEN constant.');
+		}
+
+		return parent::__construct($key, $secret_key,'','', $user_token);
 	}
 
 
@@ -654,7 +659,8 @@ class AmazonS3 extends CFRuntime
 			}
 			elseif (substr(strtolower($header_key), 0, 6) === 'x-amz-')
 			{
-				$string_to_sign .= strtolower($header_key) . ':' . $header_value . "\n";
+				// vishal note (@todo): this is a temporary cop-out for my specific case. I will revisit this and generalise this for all cases later.
+				$string_to_sign .= strtolower($header_key) . ':' . $header_value[0] . ",".$header_value[1]."\n";
 			}
 		}
 
@@ -1048,6 +1054,12 @@ class AmazonS3 extends CFRuntime
 		if (!$opt) $opt = array();
 		$opt['verb'] = 'GET';
 
+		// If AWS_DEVPAY_PRODUCT_TOKEN is set in config.inc.php then we are dealing with Devpay S3 Buckets. Set headers accordingly.
+		if (defined('AWS_DEVPAY_PRODUCT_TOKEN')){
+			$opt['headers'] = array(
+			'X-Amz-Security-Token' => array($this->user_token,AWS_DEVPAY_PRODUCT_TOKEN)
+			);
+		}
 		return $this->authenticate('', $opt);
 	}
 
@@ -1333,6 +1345,13 @@ class AmazonS3 extends CFRuntime
 
 		// Add this to our request
 		$opt['verb'] = 'GET';
+
+		// check if devpay bucket and if it is, set appropriate headers.
+		if (defined('AWS_DEVPAY_PRODUCT_TOKEN')){
+			$opt['headers'] = array(
+			'X-Amz-Security-Token' => array($this->user_token,AWS_DEVPAY_PRODUCT_TOKEN)
+			);
+		}
 
 		foreach (array('delimiter', 'marker', 'max-keys', 'prefix') as $param)
 		{

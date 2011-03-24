@@ -655,7 +655,18 @@ class RequestCore
 
 			foreach ($this->request_headers as $k => $v)
 			{
-				$temp_headers[] = $k . ': ' . $v;
+				//vishal note: This is for cases where we have duplicate headers with different values eg. "X-Amz-Security-Token" in case of devpay buckets.
+				if(is_array($v))
+				{
+					foreach($v as $arr_value)
+					{
+						$temp_headers[] = $k . ': ' . $arr_value;
+					}
+				}
+				else
+				{
+					$temp_headers[] = $k . ': ' . $v;
+				}
 			}
 
 			curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $temp_headers);

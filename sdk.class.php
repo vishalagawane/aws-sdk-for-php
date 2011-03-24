@@ -160,6 +160,13 @@ class CFRuntime
 	public $secret_key;
 
 	/**
+	 * Property: user_token
+	 * 	The Amazon API User Token.
+	 * vishal note: my original edit was based off of tag - 1.2.2 and there was no auth_token (below) in use then. I guess auth_token = user_token for regular (non-devpay) s3 buckets
+	 */
+	public $user_token;
+
+	/**
 	 * The Amazon Authentication Token.
 	 */
 	public $auth_token;
@@ -338,7 +345,7 @@ class CFRuntime
 	 * @param string $assoc_id (Optional) Your Amazon Associates ID. Required for PAS. If blank, it will look for the <AWS_ASSOC_ID> constant.
 	 * @return boolean A value of `false` if no valid values are set, otherwise `true`.
 	 */
-	public function __construct($key = null, $secret_key = null, $account_id = null, $assoc_id = null)
+	public function __construct($key = null, $secret_key = null, $account_id = null, $assoc_id = null, $user_token = null)
 	{
 		// Instantiate the utilities class.
 		$this->util = new $this->utilities_class();
@@ -349,6 +356,7 @@ class CFRuntime
 		// Set default values
 		$this->key = null;
 		$this->secret_key = null;
+		$this->user_token = null;
 		$this->account_id = null;
 		$this->assoc_id = null;
 
@@ -372,18 +380,20 @@ class CFRuntime
 			$this->assoc_id = AWS_ASSOC_ID;
 		}
 
-		// If both a key and secret key are passed in, use those.
-		if ($key && $secret_key)
+		// If all: key, secret key and user token are passed in, use those.
+		if ($key && $secret_key && $user_token)
 		{
 			$this->key = $key;
 			$this->secret_key = $secret_key;
+			$this->user_token = $user_token;
 			return true;
 		}
 		// If neither are passed in, look for the constants instead.
-		elseif (defined('AWS_KEY') && defined('AWS_SECRET_KEY'))
+		elseif (defined('AWS_KEY') && defined('AWS_SECRET_KEY') && defined('AWS_DEVPAY_USER_TOKEN'))
 		{
 			$this->key = AWS_KEY;
 			$this->secret_key = AWS_SECRET_KEY;
+			$this->user_token = AWS_DEVPAY_USER_TOKEN;
 			return true;
 		}
 
