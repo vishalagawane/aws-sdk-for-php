@@ -343,6 +343,7 @@ class CFRuntime
 	 * @param string $secret_key (Optional) Your Amazon API Secret Key. If blank, it will look for the <AWS_SECRET_KEY> constant.
 	 * @param string $account_id (Optional) Your Amazon account ID without the hyphens. Required for EC2. If blank, it will look for the <AWS_ACCOUNT_ID> constant.
 	 * @param string $assoc_id (Optional) Your Amazon Associates ID. Required for PAS. If blank, it will look for the <AWS_ASSOC_ID> constant.
+	 * @param string $user_token (Optional) Your Amazon API User Token. Required for accessing Devpay S3 Buckets. If blank, it will look for the <AWS_DEVPAY_USER_TOKEN> constant.
 	 * @return boolean A value of `false` if no valid values are set, otherwise `true`.
 	 */
 	public function __construct($key = null, $secret_key = null, $account_id = null, $assoc_id = null, $user_token = null)

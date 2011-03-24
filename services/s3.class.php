@@ -249,6 +249,7 @@ class AmazonS3 extends CFRuntime
 	 *
 	 * @param string $key (Optional) Amazon API Key. If blank, the `AWS_KEY` constant is used.
 	 * @param string $secret_key (Optional) Amazon API Secret Key. If blank, the `AWS_SECRET_KEY` constant is used.
+	 * @param $user_token (Optional) Amazon API User Token (For accessing Devpay S3 Buckets). If blank, the `AWS_DEVPAY_USER_TOKEN` constant is used.
 	 * @return boolean A value of <code>false</code> if no valid values are set, otherwise <code>true</code>.
 	 */
 	public function __construct($key = null, $secret_key = null, $user_token = null)
